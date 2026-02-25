@@ -1,0 +1,36 @@
+name: Build Flet APK
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout kodu al
+        uses: actions/checkout@v4
+
+      - name: Python Kurulumu
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Flutter ve Android Altyapisi
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      - name: Gerekli Kütüphaneleri Yukle
+        run: |
+          pip install flet requests
+
+      - name: APK Derleme Islemini Baslat
+        run: flet build apk
+
+      - name: APK Dosyasini İndirime Hazirla
+        uses: actions/upload-artifact@v4
+        with:
+          name: kelime-bulucu-apk
+          path: build/apk/app-release.apk
